@@ -28,4 +28,19 @@ dependencyResolutionManagement {
     }
 }
 
+// APP
 include(":composeApp")
+
+// COMMON
+include(":common:mvi:mvi-general")
+include(":common:mvi:mvi-koin-voyager")
+include(":common:logger")
+include(":common:utils")
+
+// CORE
+include(":core:recources")
+include(":core:database")
+
+// FEATURE
+include(":feature:items-list-screen:items-list-screen-api")
+include(":feature:items-list-screen:items-list-screen-impl")
