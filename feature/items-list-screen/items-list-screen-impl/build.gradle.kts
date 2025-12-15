@@ -21,6 +21,8 @@ kotlin {
             implementation(projects.common.mvi.mviGeneral)
             implementation(projects.common.mvi.mviKoinVoyager)
             implementation(projects.core.recources)
+            implementation(projects.feature.itemsListScreen.itemsListScreenApi)
+            implementation(projects.components.item)
 
             implementation(libs.kotlinx.coroutines.core)
 

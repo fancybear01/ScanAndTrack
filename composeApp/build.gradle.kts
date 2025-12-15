@@ -8,29 +8,36 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+// apply { from("../tools/hooks/install-git-hooks.gradle.kts") }
+
+compose.resources {
+    generateResClass = never
+}
+
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    
+    androidTarget()
+
     listOf(
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
+            baseName = "app"
+            binaryOptions["bundleId"] = "com.coding.sat.composeapp"
         }
     }
-    
+
     sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
         commonMain.dependencies {
+            implementation(projects.common.logger)
+            implementation(projects.common.mvi.mviGeneral)
+            implementation(projects.common.mvi.mviKoinVoyager)
+            implementation(projects.core.recources)
+            implementation(projects.core.database)
+            implementation(projects.components.item)
+            implementation(projects.feature.itemsListScreen.itemsListScreenApi)
+            implementation(projects.feature.itemsListScreen.itemsListScreenImpl)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -41,18 +48,23 @@ kotlin {
             implementation(libs.voyager.screenModel)
             implementation(libs.voyager.navigator)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.koin.android)
+            implementation(libs.koin.android.compose)
+            implementation(libs.koin.android.navigation)
         }
     }
 }
 
 android {
-    namespace = "com.coding.sat"
+    namespace = "com.coding.sat.composeapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
     defaultConfig {
-        applicationId = "com.coding.sat"
+        applicationId = "com.coding.sat.composeapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -69,12 +81,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    dependencies {
+        debugImplementation(libs.compose.ui.tooling)
     }
 }
-
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-
