@@ -44,3 +44,6 @@ include(":core:database")
 // FEATURE
 include(":feature:items-list-screen:items-list-screen-api")
 include(":feature:items-list-screen:items-list-screen-impl")
+
+// COMPONENTS
+include(":components:item")
