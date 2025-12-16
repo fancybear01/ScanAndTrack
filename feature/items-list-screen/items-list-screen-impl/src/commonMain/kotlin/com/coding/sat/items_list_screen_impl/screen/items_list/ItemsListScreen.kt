@@ -29,6 +29,8 @@ internal class ItemsListScreen :
             }
         }
 
-        ItemsListScreenContent()
+        ItemsListScreenContent(
+            items = state.items
+        )
     }
 }
