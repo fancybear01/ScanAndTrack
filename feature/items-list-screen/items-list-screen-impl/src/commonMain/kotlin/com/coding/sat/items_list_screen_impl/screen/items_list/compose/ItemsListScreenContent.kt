@@ -29,7 +29,8 @@ import com.coding.sat.item.domain.model.Item
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ItemsListScreenContent(
-    items: List<Item>
+    items: List<Item>,
+    onFabClick: () -> Unit
 ) {
     MaterialTheme {
         Scaffold(
@@ -38,7 +39,7 @@ internal fun ItemsListScreenContent(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = onFabClick,
                     shape = CircleShape,
                     containerColor = Color(0xFFFFD54F),
                     contentColor = Color.Black

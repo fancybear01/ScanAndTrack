@@ -1,13 +1,13 @@
 package com.coding.add_item_screen_impl
 
-import com.coding.items_list_screen_api.ItemsListScreenApi
+import com.coding.add_item_screen_api.AddItemScreenApi
+import com.coding.add_item_screen_impl.items_list.AddItemScreen
+import com.coding.add_item_screen_impl.items_list.AddItemScreenModel
 import com.coding.mvi_koin_voyager.provideMviModel
-import com.coding.sat.items_list_screen_impl.screen.items_list.ItemsListScreen
-import com.coding.sat.items_list_screen_impl.screen.items_list.ItemsListScreenModel
 import org.koin.dsl.module
 
-val itemsListScreenModule
+val addItemScreenModule
     get() = module {
-        provideMviModel<ItemsListScreen> { tag, _ -> ItemsListScreenModel(tag, get()) }
-        single<ItemsListScreenApi> { AddItemScreenImpl() }
+        provideMviModel<AddItemScreen> { tag, _ -> AddItemScreenModel(tag) }
+        single<AddItemScreenApi> { AddItemScreenImpl() }
     }

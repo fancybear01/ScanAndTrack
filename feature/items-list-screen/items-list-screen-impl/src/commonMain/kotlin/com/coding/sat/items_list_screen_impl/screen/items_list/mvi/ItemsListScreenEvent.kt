@@ -4,4 +4,5 @@ import com.coding.mvi_general.MviEvent
 
 internal sealed interface ItemsListScreenEvent : MviEvent {
     data class NavigateToItemDetails(val id: Int) : ItemsListScreenEvent
+    data object NavigateToAddItem : ItemsListScreenEvent
 }

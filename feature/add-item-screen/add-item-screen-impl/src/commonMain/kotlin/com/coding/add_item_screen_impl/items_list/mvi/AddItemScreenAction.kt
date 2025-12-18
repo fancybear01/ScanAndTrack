@@ -4,4 +4,5 @@ import com.coding.mvi_general.MviAction
 
 internal sealed interface AddItemScreenAction : MviAction {
     data object SaveItem : AddItemScreenAction
+    data object ClickOnBack : AddItemScreenAction
 }

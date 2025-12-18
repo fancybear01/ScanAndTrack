@@ -1,9 +1,9 @@
 package com.coding.add_item_screen_impl
 
 import cafe.adriel.voyager.core.screen.Screen
-import com.coding.items_list_screen_api.ItemsListScreenApi
-import com.coding.sat.items_list_screen_impl.screen.items_list.ItemsListScreen
+import com.coding.add_item_screen_api.AddItemScreenApi
+import com.coding.add_item_screen_impl.items_list.AddItemScreen
 
-internal class AddItemScreenImpl : ItemsListScreenApi {
-    override fun itemsListScreen(): Screen = ItemsListScreen()
+internal class AddItemScreenImpl : AddItemScreenApi {
+    override fun addItemScreen(): Screen = AddItemScreen()
 }

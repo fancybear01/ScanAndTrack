@@ -38,6 +38,8 @@ kotlin {
             implementation(projects.components.item)
             implementation(projects.feature.itemsListScreen.itemsListScreenApi)
             implementation(projects.feature.itemsListScreen.itemsListScreenImpl)
+            implementation(projects.feature.addItemScreen.addItemScreenApi)
+            implementation(projects.feature.addItemScreen.addItemScreenImpl)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

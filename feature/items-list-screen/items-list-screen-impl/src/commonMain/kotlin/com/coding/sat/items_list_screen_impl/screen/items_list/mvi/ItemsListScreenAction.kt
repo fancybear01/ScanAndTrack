@@ -4,4 +4,5 @@ import com.coding.mvi_general.MviAction
 
 internal sealed interface ItemsListScreenAction : MviAction {
     data class ClickOnItem(val id: Int) : ItemsListScreenAction
+    data object AddItem : ItemsListScreenAction
 }

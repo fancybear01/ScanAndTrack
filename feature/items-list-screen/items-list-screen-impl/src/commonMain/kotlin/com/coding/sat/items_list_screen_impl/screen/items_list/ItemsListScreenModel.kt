@@ -6,6 +6,7 @@ import com.coding.sat.item.domain.usecase.GetItemsUseCase
 import com.coding.sat.items_list_screen_impl.screen.items_list.mvi.ItemsListScreenAction
 import com.coding.sat.items_list_screen_impl.screen.items_list.mvi.ItemsListScreenEffect
 import com.coding.sat.items_list_screen_impl.screen.items_list.mvi.ItemsListScreenEvent
+import com.coding.sat.items_list_screen_impl.screen.items_list.mvi.ItemsListScreenEvent.*
 import com.coding.sat.items_list_screen_impl.screen.items_list.mvi.ItemsListScreenState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,6 +36,9 @@ internal class ItemsListScreenModel(
     override suspend fun actor(action: ItemsListScreenAction) =
         when (action) {
             is ItemsListScreenAction.ClickOnItem ->
-                push(ItemsListScreenEvent.NavigateToItemDetails(action.id))
+                push(NavigateToItemDetails(action.id))
+
+            ItemsListScreenAction.AddItem ->
+                push(NavigateToAddItem)
         }
 }

@@ -22,6 +22,7 @@ kotlin {
             implementation(projects.common.mvi.mviKoinVoyager)
             implementation(projects.core.recources)
             implementation(projects.feature.itemsListScreen.itemsListScreenApi)
+            implementation(projects.feature.addItemScreen.addItemScreenApi)
             implementation(projects.components.item)
 
             implementation(libs.kotlinx.coroutines.core)

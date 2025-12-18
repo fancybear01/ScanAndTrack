@@ -29,6 +29,10 @@ internal class AddItemScreen :
             }
         }
 
-        AddItemScreenContent()
+        AddItemScreenContent(
+            clickOnBack = {
+                pushAction(AddItemScreenAction.ClickOnBack)
+            }
+        )
     }
 }
