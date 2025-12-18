@@ -41,9 +41,11 @@ include(":common:utils")
 include(":core:recources")
 include(":core:database")
 
+// COMPONENTS
+include(":components:item")
+
 // FEATURE
 include(":feature:items-list-screen:items-list-screen-api")
 include(":feature:items-list-screen:items-list-screen-impl")
-
-// COMPONENTS
-include(":components:item")
+include(":feature:add-item-screen:add-item-screen-api")
+include(":feature:add-item-screen:add-item-screen-impl")

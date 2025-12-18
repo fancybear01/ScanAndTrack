@@ -44,7 +44,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.coding.sat.feature.main_screen.impl"
+    namespace = "com.coding.sat.feature.items_list_screen.impl"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
     compileOptions {

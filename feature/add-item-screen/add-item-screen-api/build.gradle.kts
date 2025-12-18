@@ -29,7 +29,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.coding.sat.feature.items_list_screen.api"
+    namespace = "com.coding.sat.feature.add_item_screen.api"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
     compileOptions {
