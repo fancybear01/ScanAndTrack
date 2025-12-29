@@ -1,52 +1,69 @@
 package com.coding.add_item_screen_impl.items_list.mvi
 
 import com.coding.mvi_general.MviState
+import com.coding.sat.item.domain.model.Item
 import com.coding.sat.item.domain.model.ItemCategory
 
 internal data class AddItemScreenState(
-    val draft: AddItemDraft = AddItemDraft(),
+    val id: String = "",
+    val title: String = "",
+    val categoryInput: String = "",
+    val category: ItemCategory? = null,
+    val note: String = "",
+    val imagePath: String? = null,
+    val barcode: String = "",
+    val timestamp: Long? = null,
     val validationErrors: Set<AddItemValidationError> = emptySet(),
     val isSaving: Boolean = false
 ) : MviState {
 
     val isSaveEnabled: Boolean
-        get() = validationErrors.isEmpty() && draft.isReadyForSave
+        get() = validationErrors.isEmpty() && title.isNotBlank() && category != null
 
-    fun setTitle(title: String) = updateDraft { copy(title = title) }
+    fun updateTitle(newTitle: String) = withValidation(copy(title = newTitle))
 
-    fun setCategory(category: ItemCategory?) = updateDraft { copy(category = category) }
+    fun updateCategoryInput(newCategoryInput: String): AddItemScreenState {
+        val normalizedCategory = ItemCategory.entries.firstOrNull {
+            it.name.equals(newCategoryInput.trim(), ignoreCase = true)
+        }
+        return withValidation(copy(categoryInput = newCategoryInput, category = normalizedCategory))
+    }
 
-    fun setNote(note: String) = updateDraft { copy(note = note) }
+    fun updateCategory(newCategory: ItemCategory?) = withValidation(copy(category = newCategory))
 
-    fun setBarcode(barcode: String) = updateDraft { copy(barcode = barcode) }
+    fun updateNote(newNote: String) = copy(note = newNote)
 
-    fun setImagePath(imagePath: String?) = updateDraft { copy(imagePath = imagePath) }
+    fun updateBarcode(newBarcode: String) = copy(barcode = newBarcode)
 
-    fun setTimestamp(timestamp: Long?) = updateDraft { copy(timestamp = timestamp) }
+    fun updateImagePath(newImagePath: String?) = copy(imagePath = newImagePath)
+
+    fun updateTimestamp(newTimestamp: Long?) = copy(timestamp = newTimestamp)
+
+    fun updateId(newId: String) = copy(id = newId)
 
     fun toggleSaving(isSaving: Boolean) = copy(isSaving = isSaving)
 
-    private fun updateDraft(transform: AddItemDraft.() -> AddItemDraft): AddItemScreenState {
-        val nextDraft = draft.transform()
-        val nextErrors = AddItemDraftValidator.validate(nextDraft)
-        return copy(draft = nextDraft, validationErrors = nextErrors)
-    }
+    fun toDomainItem(): Item? =
+        if (category != null && timestamp != null) {
+            Item(
+                id = id,
+                title = title.trim(),
+                category = category,
+                note = note.ifBlank { null },
+                imagePath = imagePath,
+                barcode = barcode.ifBlank { null },
+                timestamp = timestamp
+            )
+        } else {
+            null
+        }
+
+    private fun withValidation(next: AddItemScreenState): AddItemScreenState =
+        next.copy(validationErrors = AddItemValidator.validate(next))
 
     companion object {
         val DEFAULT = AddItemScreenState()
     }
-}
-
-internal data class AddItemDraft(
-    val title: String = "",
-    val category: ItemCategory? = null,
-    val note: String = "",
-    val imagePath: String? = null,
-    val barcode: String = "",
-    val timestamp: Long? = null
-) {
-    val isReadyForSave: Boolean
-        get() = title.isNotBlank() && category != null
 }
 
 internal enum class AddItemValidationError {
@@ -54,9 +71,9 @@ internal enum class AddItemValidationError {
     CATEGORY_NOT_SELECTED
 }
 
-private object AddItemDraftValidator {
-    fun validate(draft: AddItemDraft): Set<AddItemValidationError> = buildSet {
-        if (draft.title.isBlank()) add(AddItemValidationError.EMPTY_TITLE)
-        if (draft.category == null) add(AddItemValidationError.CATEGORY_NOT_SELECTED)
+private object AddItemValidator {
+    fun validate(state: AddItemScreenState): Set<AddItemValidationError> = buildSet {
+        if (state.title.isBlank()) add(AddItemValidationError.EMPTY_TITLE)
+        if (state.category == null) add(AddItemValidationError.CATEGORY_NOT_SELECTED)
     }
 }

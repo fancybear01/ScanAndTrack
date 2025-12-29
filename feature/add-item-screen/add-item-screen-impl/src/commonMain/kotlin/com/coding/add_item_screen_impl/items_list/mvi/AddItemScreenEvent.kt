@@ -4,4 +4,5 @@ import com.coding.mvi_general.MviEvent
 
 internal sealed interface AddItemScreenEvent : MviEvent {
     data object NavigateBack : AddItemScreenEvent
+    data class ShowError(val message: String) : AddItemScreenEvent
 }

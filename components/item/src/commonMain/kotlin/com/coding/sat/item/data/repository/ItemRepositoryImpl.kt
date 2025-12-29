@@ -22,10 +22,10 @@ internal class ItemRepositoryImpl(
     )
 
     override fun observeItems(): Flow<List<Item>> =
-        flowOf(mockItems)
-//        dao.getAllItems().map { list ->
-//            list.map { it.toDomain() }
-//        }
+        //flowOf(mockItems)
+        dao.getAllItems().map { list ->
+            list.map { it.toDomain() }
+        }
 
     override suspend fun getItem(id: String): Item? =
         dao.getById(id)?.toDomain()
