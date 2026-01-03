@@ -33,6 +33,7 @@ internal class ItemsListScreenModel(
         previousState: ItemsListScreenState
     ): ItemsListScreenState = when(effect) {
         is ItemsListScreenEffect.GetItems -> previousState.setItems(items = effect.items)
+        is ItemsListScreenEffect.SearchQueryUpdated -> previousState.updateQuery(query = effect.query)
     }
 
     override suspend fun actor(action: ItemsListScreenAction) =
@@ -45,5 +46,8 @@ internal class ItemsListScreenModel(
 
             is ItemsListScreenAction.DeleteItem ->
                 deleteItemUseCase(action.item)
+
+            is ItemsListScreenAction.SearchQueryChanged ->
+                push(ItemsListScreenEffect.SearchQueryUpdated(action.query))
         }
 }

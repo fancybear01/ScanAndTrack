@@ -35,7 +35,12 @@ internal class ItemsListScreen :
         }
 
         ItemsListScreenContent(
-            items = state.items,
+            items = state.filteredItems,
+            totalItems = state.items.size,
+            query = state.query,
+            onQueryChange = { text ->
+                pushAction(ItemsListScreenAction.SearchQueryChanged(text))
+            },
             onFabClick = {
                 pushAction(ItemsListScreenAction.AddItem)
             },

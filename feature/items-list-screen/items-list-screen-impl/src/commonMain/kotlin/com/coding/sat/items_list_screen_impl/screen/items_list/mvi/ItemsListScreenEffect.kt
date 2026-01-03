@@ -5,4 +5,5 @@ import com.coding.sat.item.domain.model.Item
 
 internal sealed interface ItemsListScreenEffect : MviEffect {
     data class GetItems(val items: List<Item>) : ItemsListScreenEffect
+    data class SearchQueryUpdated(val query: String) : ItemsListScreenEffect
 }
