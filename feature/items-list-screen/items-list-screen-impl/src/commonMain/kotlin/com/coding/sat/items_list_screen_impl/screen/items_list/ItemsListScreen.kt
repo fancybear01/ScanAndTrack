@@ -38,6 +38,9 @@ internal class ItemsListScreen :
             items = state.items,
             onFabClick = {
                 pushAction(ItemsListScreenAction.AddItem)
+            },
+            onDeleteClick = { item ->
+                pushAction(ItemsListScreenAction.DeleteItem(item))
             }
         )
     }

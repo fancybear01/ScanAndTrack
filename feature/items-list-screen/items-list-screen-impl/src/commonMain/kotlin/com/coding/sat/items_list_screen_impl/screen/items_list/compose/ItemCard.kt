@@ -46,7 +46,7 @@ private fun formatTimestamp(timestamp: Long): String {
 @Composable
 fun ItemCard(
     item: Item,
-    onDeleteClick: () -> Unit = {}
+    onDeleteClick: (Item) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -108,10 +108,14 @@ fun ItemCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            IconButton(onClick = onDeleteClick) {
+            IconButton(
+                onClick = {
+                    onDeleteClick(item)
+                }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = null,
+                    contentDescription = "delete",
                     tint = MaterialTheme.colorScheme.error
                 )
             }

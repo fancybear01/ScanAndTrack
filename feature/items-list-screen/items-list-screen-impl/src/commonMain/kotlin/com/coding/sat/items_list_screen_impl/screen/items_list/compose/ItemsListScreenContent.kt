@@ -30,12 +30,15 @@ import com.coding.sat.item.domain.model.Item
 @Composable
 internal fun ItemsListScreenContent(
     items: List<Item>,
-    onFabClick: () -> Unit
+    onFabClick: () -> Unit,
+    onDeleteClick: (Item) -> Unit
 ) {
     MaterialTheme {
         Scaffold(
             topBar = {
-                ItemTopBar()
+                ItemTopBar(
+                    totalItems = items.size
+                )
             },
             floatingActionButton = {
                 FloatingActionButton(
@@ -61,7 +64,8 @@ internal fun ItemsListScreenContent(
             ) {
                 items(items) { item ->
                     ItemCard(
-                        item = item
+                        item = item,
+                        onDeleteClick = onDeleteClick
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }

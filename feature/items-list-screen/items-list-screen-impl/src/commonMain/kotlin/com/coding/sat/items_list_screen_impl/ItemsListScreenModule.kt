@@ -8,6 +8,6 @@ import org.koin.dsl.module
 
 val itemsListScreenModule
     get() = module {
-        provideMviModel<ItemsListScreen> { tag, _ -> ItemsListScreenModel(tag, get()) }
+        provideMviModel<ItemsListScreen> { tag, _ -> ItemsListScreenModel(tag, get(), get()) }
         single<ItemsListScreenApi> { ItemsListScreenImpl() }
     }

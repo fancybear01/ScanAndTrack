@@ -17,7 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ItemTopBar() {
+fun ItemTopBar(
+    totalItems: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +36,7 @@ fun ItemTopBar() {
                 style = MaterialTheme.typography.headlineMedium
             )
             Text(
-                text = "Total",
+                text = "Total: $totalItems",
                 style = MaterialTheme.typography.titleMedium
             )
         }
