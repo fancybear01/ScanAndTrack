@@ -1,5 +1,6 @@
 package com.coding.add_item_screen_impl.items_list.compose
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,21 +10,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenState
+import com.coding.sat.item.domain.model.ItemCategory
+import kotlinx.coroutines.launch
+import kotlin.enums.enumEntries
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +53,13 @@ internal fun AddItemScreenContent(
                 )
             }
         ) { innerPadding ->
+            val scope = rememberCoroutineScope()
+            val sheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = false
+            )
+            var showBottomSheet by remember { mutableStateOf(false) }
+            var chosenCategory: String? by remember { mutableStateOf(null) }
+
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
@@ -68,12 +88,62 @@ internal fun AddItemScreenContent(
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.SemiBold
                     )
-                    OutlinedTextField(
-                        value = state.categoryInput,
-                        onValueChange = { onAction(AddItemScreenAction.CategoryInputChanged(it)) },
-                        label = { Text("Enter category") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+
+                    Button(
+                        onClick = { showBottomSheet = true }
+                    ) {
+                        Text(
+                            text = if (chosenCategory == null) "Choose category" else "$chosenCategory",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Light
+                        )
+                    }
+
+                    if (showBottomSheet) {
+                        ModalBottomSheet(
+                            onDismissRequest = { showBottomSheet = false },
+                            sheetState = sheetState,
+                            dragHandle = { BottomSheetDefaults.DragHandle() }
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                for (category in enumEntries<ItemCategory>()) {
+                                    Text(
+                                        text = "$category",
+                                        modifier = Modifier
+                                            .clickable(
+                                                onClick = {
+                                                    onAction(
+                                                        AddItemScreenAction.CategoryInputChanged(
+                                                            category.toString()
+                                                        )
+                                                    )
+                                                    chosenCategory = category.toString()
+                                                    scope.launch {
+                                                        sheetState.hide()
+                                                    }.invokeOnCompletion {
+                                                        if (!sheetState.isVisible) {
+                                                            showBottomSheet = false
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                    )
+                                }
+                                Button(onClick = {
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            showBottomSheet = false
+                                        }
+                                    }
+                                }) {
+                                    Text("Закрыть")
+                                }
+                            }
+                        }
+                    }
 
                     Text(
                         text = "Note",
