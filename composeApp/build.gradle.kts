@@ -59,6 +59,11 @@ kotlin {
             implementation(libs.koin.android.compose)
             implementation(libs.koin.android.navigation)
         }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }
 
