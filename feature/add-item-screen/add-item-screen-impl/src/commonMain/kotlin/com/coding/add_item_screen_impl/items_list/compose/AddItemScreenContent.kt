@@ -1,14 +1,22 @@
 package com.coding.add_item_screen_impl.items_list.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -28,10 +36,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.rememberAsyncImagePainter
+import com.coding.add_item_screen_impl.camera.rememberCameraPicker
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenState
 import com.coding.sat.item.domain.model.ItemCategory
@@ -57,19 +68,26 @@ internal fun AddItemScreenContent(
             val sheetState = rememberModalBottomSheetState(
                 skipPartiallyExpanded = false
             )
+            val screenState = rememberScrollState()
             var showBottomSheet by remember { mutableStateOf(false) }
             var chosenCategory: String? by remember { mutableStateOf(null) }
+
+            val cameraPicker = rememberCameraPicker(
+                onPhotoTaken = { uriString ->
+                    onAction(AddItemScreenAction.ImagePathChanged(uriString))
+                }
+            )
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(innerPadding)
                     .padding(vertical = 16.dp, horizontal = 16.dp)
+                    .verticalScroll(screenState)
             ) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .weight(1f)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
                         text = "Title",
@@ -143,6 +161,43 @@ internal fun AddItemScreenContent(
                                 }
                             }
                         }
+                    }
+
+                    Text(
+                        text = "Photo",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Button(
+                        onClick = { cameraPicker.takePhoto() }
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Filled.CameraAlt,
+                                contentDescription = "camera"
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = if (state.imagePath == null) "Take photo" else "Retake photo")
+                        }
+                    }
+                    if (state.imagePath != null) {
+                        Text(
+                            text = "Saved: ${state.imagePath}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                model = state.imagePath,
+                                contentScale = ContentScale.Crop,
+                            ),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "Картинка из URI",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                        )
                     }
 
                     Text(

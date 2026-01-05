@@ -39,6 +39,12 @@ kotlin {
 
             implementation(libs.voyager.koin)
             implementation(libs.voyager.screenModel)
+
+            implementation(libs.coil.compose)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core.ktx)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
