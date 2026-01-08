@@ -14,7 +14,8 @@ internal data class AddItemScreenState(
     val barcode: String = "",
     val timestamp: Long? = null,
     val validationErrors: Set<AddItemValidationError> = emptySet(),
-    val isSaving: Boolean = false
+    val isSaving: Boolean = false,
+    val isScanningBarcode: Boolean = false
 ) : MviState {
 
     val isSaveEnabled: Boolean
@@ -34,6 +35,8 @@ internal data class AddItemScreenState(
     fun updateNote(newNote: String) = copy(note = newNote)
 
     fun updateBarcode(newBarcode: String) = copy(barcode = newBarcode)
+    fun updateBarcodeScanProgress(inProgress: Boolean) = copy(isScanningBarcode = inProgress)
+    fun applyScannedBarcode(value: String?) = if (value != null) copy(barcode = value) else this
 
     fun updateImagePath(newImagePath: String?) = copy(imagePath = newImagePath)
 

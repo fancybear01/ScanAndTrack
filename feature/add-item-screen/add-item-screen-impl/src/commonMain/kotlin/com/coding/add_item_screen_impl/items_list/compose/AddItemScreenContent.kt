@@ -223,6 +223,16 @@ internal fun AddItemScreenContent(
                         label = { Text("Enter barcode") },
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Button(
+                        enabled = state.imagePath != null,
+                        onClick = { onAction(AddItemScreenAction.BarcodeScanRequested(state.imagePath!!)) }
+                    ) {
+                        Text(
+                            text = "Scan barcode",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
                 Button(
                     modifier = Modifier

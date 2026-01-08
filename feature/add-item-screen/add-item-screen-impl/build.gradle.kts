@@ -41,6 +41,8 @@ kotlin {
             implementation(libs.voyager.screenModel)
 
             implementation(libs.coil.compose)
+
+            implementation(libs.barcode.scanning)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

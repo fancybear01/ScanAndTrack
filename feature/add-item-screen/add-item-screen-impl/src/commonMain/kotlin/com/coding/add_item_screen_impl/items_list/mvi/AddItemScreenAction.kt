@@ -13,4 +13,6 @@ internal sealed interface AddItemScreenAction : MviAction {
     data class TimestampChanged(val value: Long?) : AddItemScreenAction
     data object ClickOnBack : AddItemScreenAction
     data object SaveItem : AddItemScreenAction
+    data class BarcodeScanRequested(val imageUri: String) : AddItemScreenAction
+    data class BarcodeScanCompleted(val value: String?) : AddItemScreenAction
 }

@@ -11,6 +11,13 @@ import org.koin.dsl.module
 val addItemScreenModule
     get() = module {
         single<ImageSaver> { NoOpImageSaver }
-        provideMviModel<AddItemScreen> { tag, _ -> AddItemScreenModel(tag, get(), get()) }
+        provideMviModel<AddItemScreen> { tag, _ ->
+            AddItemScreenModel(
+                tag,
+                get(),
+                get(),
+                get()
+            )
+        }
         single<AddItemScreenApi> { AddItemScreenImpl() }
     }

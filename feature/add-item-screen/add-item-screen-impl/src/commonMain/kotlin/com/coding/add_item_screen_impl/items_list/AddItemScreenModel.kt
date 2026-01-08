@@ -1,6 +1,8 @@
 package com.coding.add_item_screen_impl.items_list
 
+import com.coding.add_item_screen_impl.camera.BarcodeScanner
 import com.coding.add_item_screen_impl.camera.ImageSaver
+import com.coding.add_item_screen_impl.camera.ScanResult
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction.*
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenEffect
@@ -22,7 +24,8 @@ import kotlin.uuid.Uuid
 internal class AddItemScreenModel(
     tag: String,
     private val saveItemUseCase: SaveItemUseCase,
-    private val imageSaver: ImageSaver
+    private val imageSaver: ImageSaver,
+    private val barcodeScanner: BarcodeScanner
 ) : MviModel<AddItemScreenAction, AddItemScreenEffect, AddItemScreenEvent, AddItemScreenState>(
     defaultState = AddItemScreenState.DEFAULT,
     tag = tag,
@@ -41,6 +44,8 @@ internal class AddItemScreenModel(
         is AddItemScreenEffect.TimestampChanged -> previousState.updateTimestamp(effect.value)
         is IdChanged -> previousState.updateId(effect.value)
         is Saving -> previousState.toggleSaving(effect.value)
+        is BarcodeScanInProgress -> previousState.updateBarcodeScanProgress(effect.value)
+        is BarcodeScanResult -> previousState.applyScannedBarcode(effect.value)
     }
 
     override suspend fun actor(action: AddItemScreenAction) = when (action) {
@@ -53,6 +58,8 @@ internal class AddItemScreenModel(
         is AddItemScreenAction.TimestampChanged -> push(AddItemScreenEffect.TimestampChanged(action.value))
         ClickOnBack -> push(NavigateBack)
         SaveItem -> handleSave()
+        is AddItemScreenAction.BarcodeScanRequested -> handleBarcodeScan(action.imageUri)
+        is AddItemScreenAction.BarcodeScanCompleted -> push(BarcodeScanResult(action.value))
     }
 
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
@@ -92,6 +99,22 @@ internal class AddItemScreenModel(
             push(ShowError(t.message ?: "Unable to save item"))
         } finally {
             push(Saving(false))
+        }
+    }
+
+    private suspend fun handleBarcodeScan(imageUri: String) {
+        push(BarcodeScanInProgress(true))
+        try {
+            val result = withContext(Dispatchers.IO) { barcodeScanner.scan(imageUri) }
+            when (result) {
+                is ScanResult.Success -> push(BarcodeScanResult(result.value))
+                ScanResult.NotFound -> push(BarcodeScanResult(null))
+                is ScanResult.Error -> push(ShowError(result.message))
+            }
+        } catch (t: Throwable) {
+            push(ShowError(t.message ?: "Scan failed"))
+        } finally {
+            push(BarcodeScanInProgress(false))
         }
     }
 }

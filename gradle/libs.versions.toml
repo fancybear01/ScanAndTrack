@@ -16,6 +16,7 @@ androidx-test-junit = "1.3.0"
 androidx-lifecycle = "2.9.4"
 
 # Compose
+barcodeScanning = "17.3.0"
 compose-ui = "1.9.1"
 compose-saveable = "1.9.0"
 compose-plugin = "1.9.0"
@@ -75,6 +76,9 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 # datastore
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# mlkit
+barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 
 # Kotlin
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

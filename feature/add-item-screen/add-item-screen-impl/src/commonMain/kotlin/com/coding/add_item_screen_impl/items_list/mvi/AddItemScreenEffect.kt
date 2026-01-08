@@ -13,4 +13,6 @@ internal sealed interface AddItemScreenEffect : MviEffect {
     data class TimestampChanged(val value: Long?) : AddItemScreenEffect
     data class IdChanged(val value: String) : AddItemScreenEffect
     data class Saving(val value: Boolean) : AddItemScreenEffect
+    data class BarcodeScanInProgress(val value: Boolean) : AddItemScreenEffect
+    data class BarcodeScanResult(val value: String?) : AddItemScreenEffect
 }
