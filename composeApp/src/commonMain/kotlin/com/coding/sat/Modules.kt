@@ -1,6 +1,7 @@
 package com.coding.sat
 
 import com.coding.add_item_screen_impl.addItemScreenModule
+import com.coding.add_item_screen_impl.camera.di.imageSaverModule
 import com.coding.sat.database.databaseModule
 import com.coding.sat.item.di.itemModule
 import com.coding.sat.items_list_screen_impl.itemsListScreenModule
@@ -19,6 +20,9 @@ private val featureModules
     get() = listOf(
         itemsListScreenModule,
         addItemScreenModule
+    ) + listOfNotNull(
+        // Android-only module will be present only on android sourceSet
+        runCatching { imageSaverModule }.getOrNull()
     )
 
 val appModules

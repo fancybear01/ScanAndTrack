@@ -40,6 +40,8 @@ kotlin {
 
             implementation(libs.voyager.koin)
             implementation(libs.voyager.screenModel)
+
+            implementation(libs.coil.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

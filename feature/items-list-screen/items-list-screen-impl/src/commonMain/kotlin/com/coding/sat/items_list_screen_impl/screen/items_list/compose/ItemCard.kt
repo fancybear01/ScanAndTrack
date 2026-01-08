@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -18,8 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.coding.sat.core.resources.Res
 import com.coding.sat.core.resources.landscape_placeholder_svgrepo_com
 import com.coding.sat.item.domain.model.Item
@@ -69,13 +73,27 @@ fun ItemCard(
                     shape = MaterialTheme.shapes.extraLarge,
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.landscape_placeholder_svgrepo_com),
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        contentDescription = null
-                    )
+                    if (item.imagePath == null) {
+                        Image(
+                            painter = painterResource(Res.drawable.landscape_placeholder_svgrepo_com),
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .clip(MaterialTheme.shapes.medium),
+                            contentDescription = null
+                        )
+                    } else {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                model = item.imagePath,
+                                contentScale = ContentScale.Crop,
+                            ),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "Картинка из URI",
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                        )
+                    }
                 }
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp)

@@ -1,5 +1,6 @@
 package com.coding.add_item_screen_impl.items_list
 
+import com.coding.add_item_screen_impl.camera.ImageSaver
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenAction.*
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenEffect
@@ -12,6 +13,7 @@ import com.coding.mvi_koin_voyager.MviModel
 import com.coding.sat.item.domain.model.Item
 import com.coding.sat.item.domain.usecase.SaveItemUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -19,7 +21,8 @@ import kotlin.uuid.Uuid
 
 internal class AddItemScreenModel(
     tag: String,
-    private val saveItemUseCase: SaveItemUseCase
+    private val saveItemUseCase: SaveItemUseCase,
+    private val imageSaver: ImageSaver
 ) : MviModel<AddItemScreenAction, AddItemScreenEffect, AddItemScreenEvent, AddItemScreenState>(
     defaultState = AddItemScreenState.DEFAULT,
     tag = tag,
@@ -71,7 +74,7 @@ internal class AddItemScreenModel(
             return
         }
 
-        val item = Item(
+        var item = Item(
             id = ensuredId,
             title = title,
             category = category,
@@ -82,6 +85,7 @@ internal class AddItemScreenModel(
         )
 
         try {
+            item = withContext(Dispatchers.IO) { imageSaver.persist(item) }
             withContext(Dispatchers.Default) { saveItemUseCase(item) }
             push(NavigateBack)
         } catch (t: Throwable) {

@@ -18,4 +18,3 @@ internal expect fun rememberCameraPicker(
     onPhotoTaken: (String?) -> Unit,
     onError: (Throwable) -> Unit = {}
 ): CameraPicker
-
