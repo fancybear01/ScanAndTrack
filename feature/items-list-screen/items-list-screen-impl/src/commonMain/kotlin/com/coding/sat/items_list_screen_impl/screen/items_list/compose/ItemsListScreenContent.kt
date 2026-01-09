@@ -28,6 +28,7 @@ internal fun ItemsListScreenContent(
     totalItems: Int,
     query: String,
     onQueryChange: (String) -> Unit,
+    onItemClick: (String) -> Unit,
     onFabClick: () -> Unit,
     onDeleteClick: (Item) -> Unit
 ) {
@@ -64,6 +65,7 @@ internal fun ItemsListScreenContent(
             items(items) { item ->
                 ItemCard(
                     item = item,
+                    onItemClick = onItemClick,
                     onDeleteClick = onDeleteClick
                 )
                 Spacer(modifier = Modifier.height(10.dp))

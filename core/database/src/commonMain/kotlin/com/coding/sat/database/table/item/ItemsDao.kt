@@ -12,7 +12,7 @@ interface ItemsDao {
     fun getAllItems(): Flow<List<ItemEntity>>
 
     @Query("SELECT * FROM items WHERE id = :id")
-    suspend fun getById(id: String): ItemEntity?
+    suspend fun getById(id: String): ItemEntity
 
     @Insert
     suspend fun insert(item: ItemEntity)

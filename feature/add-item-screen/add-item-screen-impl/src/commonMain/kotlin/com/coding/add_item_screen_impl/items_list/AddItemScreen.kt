@@ -13,8 +13,11 @@ import com.coding.mvi_koin_voyager.MviView
 import com.coding.mvi_koin_voyager.collectEvent
 import kotlinx.coroutines.flow.Flow
 
-internal class AddItemScreen :
-    MviView<AddItemScreenAction, AddItemScreenEvent, AddItemScreenState> {
+internal class AddItemScreen(
+    private val id: String?
+) : MviView<AddItemScreenAction, AddItemScreenEvent, AddItemScreenState>, MviView.ParamsProvider {
+
+    override fun modelParams(): Array<Any?> = arrayOf(id)
 
     @Composable
     override fun content(

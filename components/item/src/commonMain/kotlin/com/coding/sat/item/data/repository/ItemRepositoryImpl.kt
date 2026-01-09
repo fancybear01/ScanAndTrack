@@ -13,22 +13,14 @@ import kotlinx.coroutines.flow.map
 internal class ItemRepositoryImpl(
     val dao: ItemsDao
 ) : ItemRepository {
-    private val mockItems = listOf(
-        Item("item-1", "Laptop", ItemCategory.ELECTRONICS, "Work device", null, "ABC123", 1_701_000_000L),
-        Item("item-2", "Jacket", ItemCategory.CLOTHES, "Winter coat", null, "DEF456", 1_701_000_100L),
-        Item("item-3", "Passport", ItemCategory.DOCUMENTS, "Travel", null, "GHI789", 1_701_000_200L),
-        Item("item-4", "Drill", ItemCategory.TOOLS, "Garage", null, "JKL012", 1_701_000_300L),
-        Item("item-5", "Vacuum", ItemCategory.HOME, "Living room", null, "MNO345", 1_701_000_400L)
-    )
 
     override fun observeItems(): Flow<List<Item>> =
-        //flowOf(mockItems)
         dao.getAllItems().map { list ->
             list.map { it.toDomain() }
         }
 
-    override suspend fun getItem(id: String): Item? =
-        dao.getById(id)?.toDomain()
+    override suspend fun getItem(id: String): Item =
+        dao.getById(id).toDomain()
 
     override suspend fun saveItem(item: Item) {
         dao.insert(item.toEntity())

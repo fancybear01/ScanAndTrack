@@ -16,9 +16,9 @@ import org.koin.core.qualifier.named
 
 interface MviView<Action : MviAction, Event : MviEvent, State : MviState> : Screen {
 
-    // Новый интерфейс: если экран реализует его, параметры будут переданы в модель
+    // интерфейс: если экран реализует его, параметры будут переданы в модель
     interface ParamsProvider {
-        fun modelParams(): Array<Any>
+        fun modelParams(): Array<Any?>
     }
 
     @Composable

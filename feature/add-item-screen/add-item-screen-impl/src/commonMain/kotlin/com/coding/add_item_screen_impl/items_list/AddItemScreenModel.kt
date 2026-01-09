@@ -13,6 +13,7 @@ import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenEvent.ShowErr
 import com.coding.add_item_screen_impl.items_list.mvi.AddItemScreenState
 import com.coding.mvi_koin_voyager.MviModel
 import com.coding.sat.item.domain.model.Item
+import com.coding.sat.item.domain.usecase.GetItemUseCase
 import com.coding.sat.item.domain.usecase.SaveItemUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -23,13 +24,21 @@ import kotlin.uuid.Uuid
 
 internal class AddItemScreenModel(
     tag: String,
+    private val id: String?,
     private val saveItemUseCase: SaveItemUseCase,
+    private val getItemUseCase: GetItemUseCase,
     private val imageSaver: ImageSaver,
     private val barcodeScanner: BarcodeScanner
 ) : MviModel<AddItemScreenAction, AddItemScreenEffect, AddItemScreenEvent, AddItemScreenState>(
     defaultState = AddItemScreenState.DEFAULT,
     tag = tag,
 ) {
+    override suspend fun bootstrap() {
+        if (id != null) {
+            val item = getItemUseCase(id = id)
+            push(SetItem(item))
+        }
+    }
 
     override fun reducer(
         effect: AddItemScreenEffect,
@@ -46,6 +55,15 @@ internal class AddItemScreenModel(
         is Saving -> previousState.toggleSaving(effect.value)
         is BarcodeScanInProgress -> previousState.updateBarcodeScanProgress(effect.value)
         is BarcodeScanResult -> previousState.applyScannedBarcode(effect.value)
+        is SetItem -> previousState.copy(
+            id = effect.value.id,
+            title = effect.value.title,
+            category = effect.value.category,
+            note = effect.value.note ?: "",
+            imagePath = effect.value.imagePath,
+            barcode = effect.value.barcode ?: "",
+            timestamp = effect.value.timestamp
+        )
     }
 
     override suspend fun actor(action: AddItemScreenAction) = when (action) {

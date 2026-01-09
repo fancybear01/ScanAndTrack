@@ -1,6 +1,7 @@
 package com.coding.add_item_screen_impl.items_list.mvi
 
 import com.coding.mvi_general.MviEffect
+import com.coding.sat.item.domain.model.Item
 import com.coding.sat.item.domain.model.ItemCategory
 
 internal sealed interface AddItemScreenEffect : MviEffect {
@@ -15,4 +16,5 @@ internal sealed interface AddItemScreenEffect : MviEffect {
     data class Saving(val value: Boolean) : AddItemScreenEffect
     data class BarcodeScanInProgress(val value: Boolean) : AddItemScreenEffect
     data class BarcodeScanResult(val value: String?) : AddItemScreenEffect
+    data class SetItem(val value: Item) : AddItemScreenEffect
 }

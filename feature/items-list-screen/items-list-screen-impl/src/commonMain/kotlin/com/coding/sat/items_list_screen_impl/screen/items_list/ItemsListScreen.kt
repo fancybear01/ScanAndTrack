@@ -27,10 +27,10 @@ internal class ItemsListScreen :
         eventFlow.collectEvent { event ->
             when (event) {
                 is ItemsListScreenEvent.NavigateToItemDetails ->
-                    TODO()
+                    navigator.push(addItemScreenApi.addItemScreen(event.id))
 
                 ItemsListScreenEvent.NavigateToAddItem ->
-                    navigator.push(addItemScreenApi.addItemScreen())
+                    navigator.push(addItemScreenApi.addItemScreen(null))
             }
         }
 
@@ -40,6 +40,9 @@ internal class ItemsListScreen :
             query = state.query,
             onQueryChange = { text ->
                 pushAction(ItemsListScreenAction.SearchQueryChanged(text))
+            },
+            onItemClick = { id ->
+                pushAction(ItemsListScreenAction.ClickOnItem(id))
             },
             onFabClick = {
                 pushAction(ItemsListScreenAction.AddItem)

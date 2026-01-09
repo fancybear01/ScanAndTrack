@@ -4,5 +4,5 @@ import com.coding.sat.item.domain.model.Item
 import com.coding.sat.item.domain.repository.ItemRepository
 
 class GetItemUseCase(val repo: ItemRepository) {
-    suspend operator fun invoke(id: String): Item? = repo.getItem(id)
+    suspend operator fun invoke(id: String): Item = repo.getItem(id)
 }

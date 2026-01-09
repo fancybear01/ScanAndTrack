@@ -1,6 +1,7 @@
 package com.coding.sat.items_list_screen_impl.screen.items_list.compose
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,11 +51,15 @@ private fun formatTimestamp(timestamp: Long): String {
 @Composable
 fun ItemCard(
     item: Item,
+    onItemClick: (String) -> Unit,
     onDeleteClick: (Item) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
+            .clickable(
+                onClick = { onItemClick(item.id) }
+            )
     ) {
         Row(
             modifier = Modifier
