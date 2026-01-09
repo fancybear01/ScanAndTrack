@@ -13,7 +13,7 @@ internal data class AddItemScreenState(
     val imagePath: String? = null,
     val barcode: String = "",
     val timestamp: Long? = null,
-    val validationErrors: Set<AddItemValidationError> = emptySet(),
+    val validationErrors: Set<AddItemValidationError> = AddItemValidator.validateInitial(title, category),
     val isSaving: Boolean = false,
     val isScanningBarcode: Boolean = false
 ) : MviState {
@@ -78,5 +78,10 @@ private object AddItemValidator {
     fun validate(state: AddItemScreenState): Set<AddItemValidationError> = buildSet {
         if (state.title.isBlank()) add(AddItemValidationError.EMPTY_TITLE)
         if (state.category == null) add(AddItemValidationError.CATEGORY_NOT_SELECTED)
+    }
+
+    fun validateInitial(title: String, category: ItemCategory?): Set<AddItemValidationError> = buildSet {
+        if (title.isBlank()) add(AddItemValidationError.EMPTY_TITLE)
+        if (category == null) add(AddItemValidationError.CATEGORY_NOT_SELECTED)
     }
 }
