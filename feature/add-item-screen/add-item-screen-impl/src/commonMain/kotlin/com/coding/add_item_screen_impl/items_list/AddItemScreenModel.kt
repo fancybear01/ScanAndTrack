@@ -62,8 +62,9 @@ internal class AddItemScreenModel(
             note = effect.value.note ?: "",
             imagePath = effect.value.imagePath,
             barcode = effect.value.barcode ?: "",
-            timestamp = effect.value.timestamp
-        )
+            timestamp = effect.value.timestamp,
+            isEditingItem = true
+        ).revalidate()
     }
 
     override suspend fun actor(action: AddItemScreenAction) = when (action) {
@@ -85,15 +86,18 @@ internal class AddItemScreenModel(
         val currentState = stateFlow.value
         if (!currentState.isSaveEnabled || currentState.isSaving) return
 
-        val ensuredId = currentState.id.ifBlank { Uuid.random().toString() }
-        val ensuredTimestamp = currentState.timestamp ?: kotlin.time.Clock.System.now().epochSeconds
+        val validatedState = currentState.revalidate()
+        if (!validatedState.isSaveEnabled) return
+
+        val ensuredId = validatedState.id.ifBlank { Uuid.random().toString() }
+        val ensuredTimestamp = kotlin.time.Clock.System.now().epochSeconds
 
         push(IdChanged(ensuredId))
         push(AddItemScreenEffect.TimestampChanged(ensuredTimestamp))
         push(Saving(true))
 
-        val category = currentState.category
-        val title = currentState.title.trim()
+        val category = validatedState.category
+        val title = validatedState.title.trim()
         if (category == null || title.isBlank()) {
             push(Saving(false))
             return
@@ -103,15 +107,15 @@ internal class AddItemScreenModel(
             id = ensuredId,
             title = title,
             category = category,
-            note = currentState.note.ifBlank { null },
-            imagePath = currentState.imagePath,
-            barcode = currentState.barcode.ifBlank { null },
+            note = validatedState.note.ifBlank { null },
+            imagePath = validatedState.imagePath,
+            barcode = validatedState.barcode.ifBlank { null },
             timestamp = ensuredTimestamp
         )
 
         try {
             item = withContext(Dispatchers.IO) { imageSaver.persist(item) }
-            withContext(Dispatchers.Default) { saveItemUseCase(item) }
+            withContext(Dispatchers.IO) { saveItemUseCase(item) }
             push(NavigateBack)
         } catch (t: Throwable) {
             push(ShowError(t.message ?: "Unable to save item"))

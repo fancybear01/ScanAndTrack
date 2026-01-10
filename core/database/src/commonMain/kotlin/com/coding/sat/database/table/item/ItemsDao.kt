@@ -2,6 +2,7 @@ package com.coding.sat.database.table.item
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Delete
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,7 @@ interface ItemsDao {
     @Query("SELECT * FROM items WHERE id = :id")
     suspend fun getById(id: String): ItemEntity
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: ItemEntity)
 
     @Delete

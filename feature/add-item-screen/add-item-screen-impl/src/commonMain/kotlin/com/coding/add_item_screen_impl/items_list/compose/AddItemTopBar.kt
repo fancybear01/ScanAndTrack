@@ -15,12 +15,13 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemTopBar(
-    clickOnBack: () -> Unit
+    clickOnBack: () -> Unit,
+    label: String
 ) {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add item",
+                text = label,
                 style = MaterialTheme.typography.headlineMedium
             )
         },

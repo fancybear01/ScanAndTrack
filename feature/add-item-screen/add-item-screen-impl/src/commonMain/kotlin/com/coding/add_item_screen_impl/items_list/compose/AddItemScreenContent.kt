@@ -2,8 +2,6 @@ package com.coding.add_item_screen_impl.items_list.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,7 +58,8 @@ internal fun AddItemScreenContent(
         Scaffold(
             topBar = {
                 AddItemTopBar(
-                    clickOnBack = clickOnBack
+                    clickOnBack = clickOnBack,
+                    label = if (state.isEditingItem) "Edit item" else "Add item"
                 )
             }
         ) { innerPadding ->
@@ -70,7 +69,6 @@ internal fun AddItemScreenContent(
             )
             val screenState = rememberScrollState()
             var showBottomSheet by remember { mutableStateOf(false) }
-            var chosenCategory: String? by remember { mutableStateOf(null) }
 
             val cameraPicker = rememberCameraPicker(
                 onPhotoTaken = { uriString ->
@@ -111,7 +109,7 @@ internal fun AddItemScreenContent(
                         onClick = { showBottomSheet = true }
                     ) {
                         Text(
-                            text = if (chosenCategory == null) "Choose category" else "$chosenCategory",
+                            text = if (state.category == null) "Choose category" else "${state.category}",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Light
                         )
@@ -138,7 +136,6 @@ internal fun AddItemScreenContent(
                                                             category.toString()
                                                         )
                                                     )
-                                                    chosenCategory = category.toString()
                                                     scope.launch {
                                                         sheetState.hide()
                                                     }.invokeOnCompletion {

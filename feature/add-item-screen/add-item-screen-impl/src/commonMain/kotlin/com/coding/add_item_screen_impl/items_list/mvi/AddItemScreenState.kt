@@ -15,11 +15,12 @@ internal data class AddItemScreenState(
     val timestamp: Long? = null,
     val validationErrors: Set<AddItemValidationError> = AddItemValidator.validateInitial(title, category),
     val isSaving: Boolean = false,
-    val isScanningBarcode: Boolean = false
+    val isScanningBarcode: Boolean = false,
+    val isEditingItem: Boolean = false
 ) : MviState {
 
     val isSaveEnabled: Boolean
-        get() = validationErrors.isEmpty() && title.isNotBlank() && category != null
+        get() = title.isNotBlank() && category != null
 
     fun updateTitle(newTitle: String) = withValidation(copy(title = newTitle))
 
@@ -45,6 +46,9 @@ internal data class AddItemScreenState(
     fun updateId(newId: String) = copy(id = newId)
 
     fun toggleSaving(isSaving: Boolean) = copy(isSaving = isSaving)
+
+    // Re-run validation after bulk updates (e.g., loading existing item)
+    fun revalidate(): AddItemScreenState = copy(validationErrors = AddItemValidator.validate(this))
 
     fun toDomainItem(): Item? =
         if (category != null && timestamp != null) {
