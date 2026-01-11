@@ -21,8 +21,7 @@ private val featureModules
         itemsListScreenModule,
         addItemScreenModule
     ) + listOfNotNull(
-        // Android-only module will be present only on android sourceSet
-        runCatching { imageSaverModule }.getOrNull()
+        imageSaverModule
     )
 
 val appModules

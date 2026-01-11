@@ -21,7 +21,8 @@ internal data class ItemsListScreenState(
     )
 
     private fun List<Item>.filterByQuery(query: String): List<Item> =
-        if (query.isBlank()) this else filter { it.title.contains(query, ignoreCase = true) }
+        (if (query.isBlank()) this else filter { it.title.contains(query, ignoreCase = true) })
+            .sortedByDescending { it.timestamp }
 
     companion object {
         val DEFAULT = ItemsListScreenState(

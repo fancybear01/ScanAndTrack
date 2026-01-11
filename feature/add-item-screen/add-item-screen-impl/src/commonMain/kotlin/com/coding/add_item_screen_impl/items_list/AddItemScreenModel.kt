@@ -18,9 +18,8 @@ import com.coding.sat.item.domain.usecase.SaveItemUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 import kotlin.time.ExperimentalTime
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 internal class AddItemScreenModel(
     tag: String,
@@ -81,7 +80,10 @@ internal class AddItemScreenModel(
         is AddItemScreenAction.BarcodeScanCompleted -> push(BarcodeScanResult(action.value))
     }
 
-    @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
+    @OptIn(ExperimentalTime::class)
+    private fun generateId(): String = "${kotlin.time.Clock.System.now().toEpochMilliseconds()}-${Random.nextLong()}"
+
+    @OptIn(ExperimentalTime::class)
     private suspend fun handleSave() {
         val currentState = stateFlow.value
         if (!currentState.isSaveEnabled || currentState.isSaving) return
@@ -89,7 +91,7 @@ internal class AddItemScreenModel(
         val validatedState = currentState.revalidate()
         if (!validatedState.isSaveEnabled) return
 
-        val ensuredId = validatedState.id.ifBlank { Uuid.random().toString() }
+        val ensuredId = validatedState.id.ifBlank { generateId() }
         val ensuredTimestamp = kotlin.time.Clock.System.now().epochSeconds
 
         push(IdChanged(ensuredId))
